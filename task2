@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather App</title>
+    <style>
+        /* Reset box-sizing for all elements */
+        * {
+            box-sizing: border-box;
+        }
+
+        /* Basic styling for the body */
+        body {
+            padding: 0;
+            margin: 0;
+            background: linear-gradient(rgba(100, 77, 202, 0.37), rgba(231, 237, 238, 0.418)),
+                url('weather.jpg');
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: top center;
+            min-height: 100vh;
+            font-family: Comic Sans MS;
+        }
+
+        /* Styling for the main section */
+        #main {
+            text-align: center;
+            font-family: Comic Sans MS;
+            font-size: 40px;
+            font-weight: bold;
+            color: black;
+        }
+
+        /* Styling for the 'write' section */
+        #write {
+            margin: 0;
+            padding: 0;
+            font-size: 40px;
+            color: black;
+            font-weight: bold;
+            font-family: Comic Sans MS;
+        }
+
+        /* Styling for columns */
+        .column {
+            float: left;
+            padding: 0;
+            margin: 0;
+        }
+
+        /* Side column specific width */
+        .column.side {
+            width: 50%;
+        }
+
+        /* Styling for text in the abc class */
+        .abc {
+            text-align: center;
+        }
+
+        /* Styling for the current time display */
+        #demo {
+            padding: 5px;
+            margin: 5px;
+            font-size: 50px;
+            font-weight: bold;
+            font-family: Times New Roman, serif;
+            color: white;
+        }
+
+        /* Styling for the current date display */
+        #demo1 {
+            padding: 5px;
+            margin: 5px;
+            font-size: 40px;
+            font-weight: bold;
+            font-family: Comic Sans MS;
+            color: white;
+        }
+
+        /* Styling for text input fields */
+        input[type=text] {
+            background-color: #fff;
+            border: none;
+            border-radius: 30px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            font-family: Comic Sans MS;
+            font-size: 1.5rem;
+            padding: 1.5rem;
+            min-width: 350px;
+        }
+
+        /* Remove outline from focused inputs */
+        input:focus {
+            outline: none;
+        }
+
+        /* Styling for h1 headings */
+        h1 {
+            padding: 0;
+            font-size: 60px;
+            text-shadow: 6px 6px 8px red;
+            text-align: center;
+            color: yellow;
+            padding-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="column side">
+        <p id="demo"></p>
+        <p id="demo1"></p>
+    </div>
+    <div class="column side">
+        <h1>Weather Forecast</h1>
+    </div>
+    <div class="abc">
+        <form id="form">
+            <input type="text" id="search" placeholder="Search by location" autocomplete="off" />
+            <p id="write">City , Country</p>
+        </form>
+        <main id="main"></main>
+    </div>
+    <script>
+        const apikey = "4d8fb5b93d4af21d66a2948710284366";
+        const main = document.getElementById("main");
+        const form = document.getElementById("form");
+        const search = document.getElementById("search");
+
+        const url = (city) =>
+            `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apikey}`;
+
+        async function getWeatherByLocation(city) {
+            try {
+                const resp = await fetch(url(city), { mode: "cors" });
+                const respData = await resp.json();
+                console.log(respData);
+                addWeatherToPage(respData);
+            } catch (error) {
+                console.error("Error fetching weather data:", error);
+            }
+        }
+
+        function addWeatherToPage(data) {
+            const temp = KtoC(data.main.temp);
+            const weather = document.createElement("div");
+            weather.classList.add("weather");
+            weather.innerHTML = `
+            <h2>
+              <img src="https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png" />
+              ${temp}°C
+              <img src="https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png" />
+            </h2> 
+            <small>${data.weather[0].main}</small>
+          `;
+            main.innerHTML = "";
+            main.appendChild(weather);
+        }
+
+        function KtoC(K) {
+            return Math.floor(K - 273.15);
+        }
+
+        form.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const city = search.value;
+            if (city) {
+                getWeatherByLocation(city);
+            }
+        });
+
+        function myTimer() {
+            const d = new Date();
+            const t = d.toLocaleTimeString();
+            document.getElementById("demo").innerHTML = t;
+        }
+
+        setInterval(myTimer, 1000);
+
+        function Myfunction() {
+            let day;
+            switch (new Date().getDay()) {
+                case 0: day = "Sunday"; break;
+                case 1: day = "Monday"; break;
+                case 2: day = "Tuesday"; break;
+                case 3: day = "Wednesday"; break;
+                case 4: day = "Thursday"; break;
+                case 5: day = "Friday"; break;
+                case 6: day = "Saturday"; break;
+            }
+
+            let month;
+            switch (new Date().getMonth()) {
+                case 0: month = "January"; break;
+                case 1: month = "February"; break;
+                case 2: month = "March"; break;
+                case 3: month = "April"; break;
+                case 4: month = "May"; break;
+                case 5: month = "June"; break;
+                case 6: month = "July"; break;
+                case 7: month = "August"; break;
+                case 8: month = "September"; break;
+                case 9: month = "October"; break;
+                case 10: month = "November"; break;
+                case 11: month = "December"; break;
+            }
+
+            const date = new Date().getDate();
+            document.getElementById("demo1").innerHTML = `${day}, ${month} ${date}`;
+        }
+
+        Myfunction();
+    </script>
+</body>
+</html>
