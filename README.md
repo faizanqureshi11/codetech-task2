@@ -4,6 +4,7 @@ Name: Faizan Qureshi
 Internship ID: CT08DS6781
 Domain: Android Development
 Duration: 10 August 2024 to 10 September 2024
+mentor: muzammil ahmed
 ![Screenshot (80)](https://github.com/user-attachments/assets/22e6bbaa-cb70-4684-bf72-1eeede1b09e1)
 ![Screenshot (79)](https://github.com/user-attachments/assets/8105f708-2b46-42d3-b5f2-273fe9877f95)
 
